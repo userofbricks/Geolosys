@@ -3,9 +3,11 @@ package com.oitsjustjose.geolosys.api.world.deposit;
 import com.oitsjustjose.geolosys.api.world.DepositUtils;
 import com.oitsjustjose.geolosys.api.world.IDeposit;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.BiomeDictionary;
 
 import javax.annotation.Nullable;
+import java.util.HashSet;
 import java.util.List;
 /*
     moved some Deposit class code to this location by Userofbricks
@@ -19,6 +21,7 @@ public abstract class Deposit implements IDeposit {
      */
     private String[] dimFilter;
     private boolean isDimFilterBl;
+    private HashSet<BlockState> blockStateMatchers;
 
     /* Optional biome stuff!
        Each has a getter and setter that has
@@ -77,5 +80,13 @@ public abstract class Deposit implements IDeposit {
     }
     protected void setDimFilter(String[] dimFilter) {
         this.dimFilter = dimFilter;
+    }
+
+    @Override
+    public HashSet<BlockState> getBlockStateMatchers() {
+        return this.blockStateMatchers == null ? DepositUtils.getDefaultMatchers() : this.blockStateMatchers;
+    }
+    public void setBlockStateMatchers(HashSet<BlockState> blockStateMatchers) {
+        this.blockStateMatchers = blockStateMatchers;
     }
 }

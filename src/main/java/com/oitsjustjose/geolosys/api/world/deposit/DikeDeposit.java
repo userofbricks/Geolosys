@@ -41,7 +41,6 @@ public class DikeDeposit extends Deposit implements IDeposit {
     private int yMax;
     private int baseRadius;
     private int genWt;
-    private HashSet<BlockState> blockStateMatchers;
 
     /* Hashmap of blockMatcher.getRegistryName(): sumWt */
     private HashMap<String, Float> cumulOreWtMap = new HashMap<>();
@@ -62,7 +61,7 @@ public class DikeDeposit extends Deposit implements IDeposit {
         this.setDimFilterBl(isDimFilterBl);
         this.setBiomeTypeFilter(biomeTypes);
         this.setBiomeFilterBl(isBiomeFilterBl);
-        this.blockStateMatchers = blockStateMatchers;
+        this.setBlockStateMatchers(blockStateMatchers);
         this.setBiomeFilter(biomeFilter);
 
         // Verify that blocks.default exists.
@@ -272,11 +271,6 @@ public class DikeDeposit extends Deposit implements IDeposit {
             FeatureUtils.tryPlaceBlock(level, thisChunk, samplePos, tmp, cap);
             FeatureUtils.fixSnowyBlock(level, samplePos);
         }
-    }
-
-    @Override
-    public HashSet<BlockState> getBlockStateMatchers() {
-        return this.blockStateMatchers == null ? DepositUtils.getDefaultMatchers() : this.blockStateMatchers;
     }
 
     public static DikeDeposit deserialize(JsonObject json, JsonDeserializationContext ctx) {

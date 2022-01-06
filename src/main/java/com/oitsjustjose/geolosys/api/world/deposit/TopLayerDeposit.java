@@ -39,7 +39,6 @@ public class TopLayerDeposit extends Deposit implements IDeposit {
     private int depth;
     private float sampleChance;
     private int genWt;
-    private HashSet<BlockState> blockStateMatchers;
 
     /* Hashmap of blockMatcher.getRegistryName(): sumWt */
     private HashMap<String, Float> cumulOreWtMap = new HashMap<>();
@@ -60,7 +59,7 @@ public class TopLayerDeposit extends Deposit implements IDeposit {
         this.setDimFilterBl(isDimFilterBl);
         this.setBiomeTypeFilter(biomeTypes);
         this.setBiomeFilterBl(isBiomeFilterBl);
-        this.blockStateMatchers = blockStateMatchers;
+        this.setBlockStateMatchers(blockStateMatchers);
         this.setBiomeFilter(biomeFilter);
 
         // Verify that blocks.default exists.
@@ -234,11 +233,6 @@ public class TopLayerDeposit extends Deposit implements IDeposit {
             Geolosys.getInstance().LOGGER.info("Generated {} in Chunk {} (Pos [{} {} {}])", this.toString(),
                     new ChunkPos(pos), pos.getX(), pos.getY(), pos.getZ());
         }
-    }
-
-    @Override
-    public HashSet<BlockState> getBlockStateMatchers() {
-        return this.blockStateMatchers == null ? DepositUtils.getDefaultMatchers() : this.blockStateMatchers;
     }
 
     public static TopLayerDeposit deserialize(JsonObject json, JsonDeserializationContext ctx) {
