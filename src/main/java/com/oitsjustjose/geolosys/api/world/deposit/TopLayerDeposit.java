@@ -33,8 +33,6 @@ import net.minecraftforge.common.BiomeDictionary;
 public class TopLayerDeposit extends Deposit implements IDeposit {
     public static final String JSON_TYPE = "geolosys:deposit_top_layer";
 
-    private HashMap<String, HashMap<BlockState, Float>> oreToWtMap = new HashMap<>();
-    private HashMap<BlockState, Float> sampleToWtMap = new HashMap<>();
     private int radius;
     private int depth;
     private float sampleChance;
@@ -48,18 +46,12 @@ public class TopLayerDeposit extends Deposit implements IDeposit {
             int depth, float sampleChance, int genWt, String[] dimFilter, boolean isDimFilterBl,
             @Nullable List<BiomeDictionary.Type> biomeTypes, @Nullable List<Biome> biomeFilter,
             @Nullable boolean isBiomeFilterBl, HashSet<BlockState> blockStateMatchers) {
+        super(genWt, dimFilter, isDimFilterBl, biomeTypes, biomeFilter, isBiomeFilterBl, blockStateMatchers);
         this.oreToWtMap = oreBlocks;
         this.sampleToWtMap = sampleBlocks;
         this.radius = radius;
         this.depth = depth;
         this.sampleChance = sampleChance;
-        this.setGenWt(genWt);
-        this.setDimFilter(dimFilter);
-        this.setDimFilterBl(isDimFilterBl);
-        this.setBiomeTypeFilter(biomeTypes);
-        this.setBiomeFilterBl(isBiomeFilterBl);
-        this.setBlockStateMatchers(blockStateMatchers);
-        this.setBiomeFilter(biomeFilter);
 
         // Verify that blocks.default exists.
         if (!this.oreToWtMap.containsKey("default")) {

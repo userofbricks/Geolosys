@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.BiomeDictionary;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 /*
@@ -19,6 +20,9 @@ public abstract class Deposit implements IDeposit {
        protected access so only the other deposite classes can use them.
        unless otherwise needed
      */
+    private HashMap<String, HashMap<BlockState, Float>> oreToWtMap = new HashMap<>();
+    private HashMap<BlockState, Float> sampleToWtMap = new HashMap<>();
+
     private String[] dimFilter;
     private boolean isDimFilterBl;
     private int genWt;
@@ -35,6 +39,18 @@ public abstract class Deposit implements IDeposit {
     private List<Biome> biomeFilter;
     @Nullable
     private boolean isBiomeFilterBl;
+
+    public Deposit (int genWt, String[] dimFilter, boolean isDimFilterBl,
+                    @Nullable List<BiomeDictionary.Type> biomeTypes, @Nullable List<Biome> biomeFilter,
+                    @Nullable boolean isBiomeFilterBl, HashSet<BlockState> blockStateMatchers) {
+        this.genWt = genWt;
+        this.dimFilter = dimFilter;
+        this.isDimFilterBl = isDimFilterBl;
+        this.biomeTypeFilter = biomeTypes;
+        this.isBiomeFilterBl =isBiomeFilterBl;
+        this.blockStateMatchers = blockStateMatchers;
+        this.biomeFilter = biomeFilter;
+    }
 
     @Nullable
     protected List<BiomeDictionary.Type> getBiomeTypeFilter() {
@@ -97,5 +113,21 @@ public abstract class Deposit implements IDeposit {
     }
     protected void setBlockStateMatchers(HashSet<BlockState> blockStateMatchers) {
         this.blockStateMatchers = blockStateMatchers;
+    }
+
+    public HashMap<String, HashMap<BlockState, Float>> getOreToWtMap() {
+        return oreToWtMap;
+    }
+
+    public void setOreToWtMap(HashMap<String, HashMap<BlockState, Float>> oreToWtMap) {
+        this.oreToWtMap = oreToWtMap;
+    }
+
+    public HashMap<BlockState, Float> getSampleToWtMap() {
+        return sampleToWtMap;
+    }
+
+    public void setSampleToWtMap(HashMap<BlockState, Float> sampleToWtMap) {
+        this.sampleToWtMap = sampleToWtMap;
     }
 }
