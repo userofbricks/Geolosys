@@ -40,10 +40,6 @@ public class LayerDeposit extends Deposit implements IDeposit {
     private int radius;
     private int depth;
 
-    /* Hashmap of blockMatcher.getRegistryName(): sumWt */
-    private HashMap<String, Float> cumulOreWtMap = new HashMap<>();
-    private float sumWtSamples = 0.0F;
-
     public LayerDeposit(HashMap<String, HashMap<BlockState, Float>> oreBlocks, HashMap<BlockState, Float> sampleBlocks,
             int yMin,
             int yMax, int radius, int depth, int genWt, String[] dimFilter, boolean isDimFilterBl,
@@ -54,68 +50,6 @@ public class LayerDeposit extends Deposit implements IDeposit {
         this.yMax = yMax;
         this.radius = radius;
         this.depth = depth;
-
-        // Verify that blocks.default exists.
-        if (!this.oreToWtMap.containsKey("default")) {
-            throw new RuntimeException("Pluton blocks should always have a default key");
-        }
-
-        for (Entry<String, HashMap<BlockState, Float>> i : this.oreToWtMap.entrySet()) {
-            if (!this.cumulOreWtMap.containsKey(i.getKey())) {
-                this.cumulOreWtMap.put(i.getKey(), 0.0F);
-            }
-
-            for (Entry<BlockState, Float> j : i.getValue().entrySet()) {
-                float v = this.cumulOreWtMap.get(i.getKey());
-                this.cumulOreWtMap.put(i.getKey(), v + j.getValue());
-            }
-
-            if (this.cumulOreWtMap.get(i.getKey()) != 1.0F) {
-                throw new RuntimeException("Sum of weights for pluton blocks should equal 1.0");
-            }
-        }
-
-        for (Entry<BlockState, Float> e : this.sampleToWtMap.entrySet()) {
-            this.sumWtSamples += e.getValue();
-        }
-
-        if (sumWtSamples != 1.0F) {
-            throw new RuntimeException("Sum of weights for pluton samples should equal 1.0");
-        }
-    }
-
-    /**
-     * Uses {@link DepositUtils#pick(HashMap, float)} to find a random ore block to
-     * return.
-     * 
-     * @return the random ore block chosen (based on weight) Can be null to
-     *         represent "density" of the ore -- null results should be used to
-     *         determine if the block in the world should be replaced. If null,
-     *         don't replace 😉
-     */
-    @Nullable
-    public BlockState getOre(BlockState currentState) {
-        String res = currentState.getBlock().getRegistryName().toString();
-        if (this.getOreToWtMap().containsKey(res)) {
-            // Return a choice from a specialized set here
-            HashMap<BlockState, Float> mp = this.getOreToWtMap().get(res);
-            return DepositUtils.pick(mp, this.cumulOreWtMap.get(res));
-        }
-        return DepositUtils.pick(this.getOreToWtMap().get("default"), this.cumulOreWtMap.get("default"));
-    }
-
-    /**
-     * Uses {@link DepositUtils#pick(HashMap, float)} to find a random pluton sample
-     * to return.
-     * 
-     * @return the random pluton sample chosen (based on weight) Can be null to
-     *         represent "density" of the samples -- null results should be used to
-     *         determine if the sample in the world should be replaced. If null,
-     *         don't replace 😉
-     */
-    @Nullable
-    public BlockState getSample() {
-        return DepositUtils.pick(this.getSampleToWtMap(), this.sumWtSamples);
     }
 
     @Override
