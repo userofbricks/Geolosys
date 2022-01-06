@@ -43,8 +43,6 @@ public class DenseDeposit extends Deposit implements IDeposit {
     private int size;
     private int genWt;
     private HashSet<BlockState> blockStateMatchers;
-    private String[] dimFilter;
-    private boolean isDimFilterBl;
 
     /* Hashmap of blockMatcher.getRegistryName(): sumWt */
     private HashMap<String, Float> cumulOreWtMap = new HashMap<>();
@@ -61,8 +59,8 @@ public class DenseDeposit extends Deposit implements IDeposit {
         this.yMax = yMax;
         this.size = size;
         this.genWt = genWt;
-        this.dimFilter = dimFilter;
-        this.isDimFilterBl = isDimFilterBl;
+        this.setDimFilter(dimFilter);
+        this.setDimFilterBl(isDimFilterBl);
         this.setBiomeTypeFilter(biomeTypes);
         this.setBiomeFilterBl(isBiomeFilterBl);
         this.blockStateMatchers = blockStateMatchers;
@@ -157,12 +155,12 @@ public class DenseDeposit extends Deposit implements IDeposit {
 
     @Override
     public String[] getDimensionFilter() {
-        return this.dimFilter;
+        return this.getDimFilter();
     }
 
     @Override
     public boolean isDimensionFilterBl() {
-        return this.isDimFilterBl;
+        return this.isDimFilterBl();
     }
 
     @Override
@@ -367,8 +365,8 @@ public class DenseDeposit extends Deposit implements IDeposit {
 
         // Custom logic for the dimension filtering
         JsonObject dimensions = new JsonObject();
-        dimensions.addProperty("isBlacklist", this.isDimFilterBl);
-        dimensions.add("filter", parser.parse(Arrays.toString(this.dimFilter)));
+        dimensions.addProperty("isBlacklist", this.isDimFilterBl());
+        dimensions.add("filter", parser.parse(Arrays.toString(this.getDimFilter())));
 
         // Add basics of Plutons
         config.add("blocks", SerializerUtils.deconstructMultiBlockMatcherMap(this.oreToWtMap));

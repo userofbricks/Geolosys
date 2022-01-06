@@ -10,16 +10,21 @@ import java.util.List;
     purpos: to clean up the deposite classes and make them easier to read.
  */
 public class Deposit {
+    /*
+       Each of the folowing variables has a getter and setter that has
+       protected access so only the other deposite classes can use them.
+     */
+    private String[] dimFilter;
+    private boolean isDimFilterBl;
 
     /* Optional biome stuff!
-       Each has a getter and setter that is protected so only the other deposite classes can use them.
+       Each has a getter and setter that has
+       protected access so only the other deposite classes can use them.
      */
     @Nullable
     private List<BiomeDictionary.Type> biomeTypeFilter;
-
     @Nullable
     private List<Biome> biomeFilter;
-
     @Nullable
     private boolean isBiomeFilterBl;
 
@@ -27,7 +32,6 @@ public class Deposit {
     protected List<BiomeDictionary.Type> getBiomeTypeFilter() {
         return biomeTypeFilter;
     }
-
     protected void setBiomeTypeFilter(@Nullable List<BiomeDictionary.Type> biomeTypeFilter) {
         this.biomeTypeFilter = biomeTypeFilter;
     }
@@ -36,7 +40,6 @@ public class Deposit {
     protected List<Biome> getBiomeFilter() {
         return biomeFilter;
     }
-
     protected void setBiomeFilter(@Nullable List<Biome> biomeFilter) {
         this.biomeFilter = biomeFilter;
     }
@@ -45,8 +48,21 @@ public class Deposit {
     protected boolean isBiomeFilterBl() {
         return isBiomeFilterBl;
     }
-
     protected void setBiomeFilterBl(@Nullable boolean biomeFilterBl) {
         isBiomeFilterBl = biomeFilterBl;
+    }
+
+    protected boolean isDimFilterBl() {
+        return isDimFilterBl;
+    }
+    protected void setDimFilterBl(boolean dimFilterBl) {
+        isDimFilterBl = dimFilterBl;
+    }
+
+    protected String[] getDimFilter() {
+        return dimFilter;
+    }
+    protected void setDimFilter(String[] dimFilter) {
+        this.dimFilter = dimFilter;
     }
 }
