@@ -3,6 +3,7 @@ package com.oitsjustjose.geolosys.api.world.deposit;
 import com.oitsjustjose.geolosys.api.world.DepositUtils;
 import com.oitsjustjose.geolosys.api.world.IDeposit;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.BiomeDictionary;
 
@@ -193,5 +194,14 @@ public abstract class Deposit implements IDeposit {
     @Nullable
     public BlockState getSample() {
         return DepositUtils.pick(this.getSampleToWtMap(), this.sumWtSamples);
+    }
+
+    @Override
+    @Nullable
+    public HashSet<BlockState> getAllOres() {
+        HashSet<BlockState> ret = new HashSet<BlockState>();
+        this.oreToWtMap.values().forEach(x -> x.keySet().forEach(y -> ret.add(y)));
+        ret.remove(Blocks.AIR.defaultBlockState());
+        return ret.isEmpty() ? null : ret;
     }
 }

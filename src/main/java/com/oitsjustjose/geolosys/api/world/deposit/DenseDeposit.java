@@ -52,15 +52,6 @@ public class DenseDeposit extends Deposit implements IDeposit {
     }
 
     @Override
-    @Nullable
-    public HashSet<BlockState> getAllOres() {
-        HashSet<BlockState> ret = new HashSet<BlockState>();
-        this.getOreToWtMap().values().forEach(x -> x.keySet().forEach(y -> ret.add(y)));
-        ret.remove(Blocks.AIR.defaultBlockState());
-        return ret.isEmpty() ? null : ret;
-    }
-
-    @Override
     public String toString() {
         StringBuilder ret = new StringBuilder();
         ret.append("Dense deposit with Blocks=");

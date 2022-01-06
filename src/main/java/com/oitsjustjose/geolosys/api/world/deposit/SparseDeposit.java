@@ -54,15 +54,6 @@ public class SparseDeposit extends Deposit implements IDeposit {
     }
 
     @Override
-    @Nullable
-    public HashSet<BlockState> getAllOres() {
-        HashSet<BlockState> ret = new HashSet<BlockState>();
-        this.getOreToWtMap().values().forEach(x -> x.keySet().forEach(y -> ret.add(y)));
-        ret.remove(Blocks.AIR.defaultBlockState());
-        return ret.isEmpty() ? null : ret;
-    }
-
-    @Override
     public String toString() {
         StringBuilder ret = new StringBuilder();
         ret.append("Sparse deposit with Blocks=");
