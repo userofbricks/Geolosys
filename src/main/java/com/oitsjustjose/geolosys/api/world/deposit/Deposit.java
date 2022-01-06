@@ -18,7 +18,7 @@ public abstract class Deposit implements IDeposit {
     /*
        Each of the folowing variables has a getter and setter that has
        protected access so only the other deposite classes can use them.
-       unless otherwise needed
+       unless otherwise needed or unneeded
      */
     private HashMap<String, HashMap<BlockState, Float>> oreToWtMap = new HashMap<>();
     private HashMap<BlockState, Float> sampleToWtMap = new HashMap<>();
@@ -27,12 +27,7 @@ public abstract class Deposit implements IDeposit {
     private boolean isDimFilterBl;
     private int genWt;
     private HashSet<BlockState> blockStateMatchers;
-
-    /* Optional biome stuff!
-       Each has a getter and setter that has
-       protected access so only the other deposite classes can use them.
-       unless otherwise needed
-     */
+    // Optional biome stuff!
     @Nullable
     private List<BiomeDictionary.Type> biomeTypeFilter;
     @Nullable
@@ -40,9 +35,13 @@ public abstract class Deposit implements IDeposit {
     @Nullable
     private boolean isBiomeFilterBl;
 
-    public Deposit (int genWt, String[] dimFilter, boolean isDimFilterBl,
+    public Deposit (HashMap<String, HashMap<BlockState, Float>> oreBlocks,
+                    HashMap<BlockState, Float> sampleBlocks, int genWt, String[] dimFilter, boolean isDimFilterBl,
                     @Nullable List<BiomeDictionary.Type> biomeTypes, @Nullable List<Biome> biomeFilter,
                     @Nullable boolean isBiomeFilterBl, HashSet<BlockState> blockStateMatchers) {
+        this.oreToWtMap = oreBlocks;
+        this.sampleToWtMap = sampleBlocks;
+
         this.genWt = genWt;
         this.dimFilter = dimFilter;
         this.isDimFilterBl = isDimFilterBl;

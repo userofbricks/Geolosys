@@ -46,9 +46,7 @@ public class TopLayerDeposit extends Deposit implements IDeposit {
             int depth, float sampleChance, int genWt, String[] dimFilter, boolean isDimFilterBl,
             @Nullable List<BiomeDictionary.Type> biomeTypes, @Nullable List<Biome> biomeFilter,
             @Nullable boolean isBiomeFilterBl, HashSet<BlockState> blockStateMatchers) {
-        super(genWt, dimFilter, isDimFilterBl, biomeTypes, biomeFilter, isBiomeFilterBl, blockStateMatchers);
-        this.oreToWtMap = oreBlocks;
-        this.sampleToWtMap = sampleBlocks;
+        super(oreBlocks, sampleBlocks, genWt, dimFilter, isDimFilterBl, biomeTypes, biomeFilter, isBiomeFilterBl, blockStateMatchers);
         this.radius = radius;
         this.depth = depth;
         this.sampleChance = sampleChance;
@@ -94,12 +92,12 @@ public class TopLayerDeposit extends Deposit implements IDeposit {
     @Nullable
     public BlockState getOre(BlockState currentState) {
         String res = currentState.getBlock().getRegistryName().toString();
-        if (this.oreToWtMap.containsKey(res)) {
+        if (this.getOreToWtMap().containsKey(res)) {
             // Return a choice from a specialized set here
-            HashMap<BlockState, Float> mp = this.oreToWtMap.get(res);
+            HashMap<BlockState, Float> mp = this.getOreToWtMap().get(res);
             return DepositUtils.pick(mp, this.cumulOreWtMap.get(res));
         }
-        return DepositUtils.pick(this.oreToWtMap.get("default"), this.cumulOreWtMap.get("default"));
+        return DepositUtils.pick(this.getOreToWtMap().get("default"), this.cumulOreWtMap.get("default"));
     }
 
     /**
@@ -113,7 +111,7 @@ public class TopLayerDeposit extends Deposit implements IDeposit {
      */
     @Nullable
     public BlockState getSample() {
-        return DepositUtils.pick(this.sampleToWtMap, this.sumWtSamples);
+        return DepositUtils.pick(this.getSampleToWtMap(), this.sumWtSamples);
     }
 
     @Override
@@ -128,7 +126,7 @@ public class TopLayerDeposit extends Deposit implements IDeposit {
         ret.append("Top Layer deposit with Blocks=");
         ret.append(this.getAllOres());
         ret.append(", Samples=");
-        ret.append(Arrays.toString(this.sampleToWtMap.keySet().toArray()));
+        ret.append(Arrays.toString(this.getSampleToWtMap().keySet().toArray()));
         ret.append(", Radius=");
         ret.append(this.radius);
         ret.append(", Depth=");
@@ -188,7 +186,7 @@ public class TopLayerDeposit extends Deposit implements IDeposit {
                     // Skip this block if it can't replace the target block or doesn't have a
                     // manually-configured replacer in the blocks object
                     if (!(this.getBlockStateMatchers().contains(current)
-                            || this.oreToWtMap.containsKey(current.getBlock().getRegistryName().toString()))) {
+                            || this.getOreToWtMap().containsKey(current.getBlock().getRegistryName().toString()))) {
                         continue;
                     }
 
@@ -283,8 +281,8 @@ public class TopLayerDeposit extends Deposit implements IDeposit {
         dimensions.add("filter", parser.parse(Arrays.toString(this.getDimensionFilter())));
 
         // Add basics of Plutons
-        config.add("blocks", SerializerUtils.deconstructMultiBlockMatcherMap(this.oreToWtMap));
-        config.add("samples", SerializerUtils.deconstructMultiBlockMap(this.sampleToWtMap));
+        config.add("blocks", SerializerUtils.deconstructMultiBlockMatcherMap(this.getOreToWtMap()));
+        config.add("samples", SerializerUtils.deconstructMultiBlockMap(this.getSampleToWtMap()));
         config.addProperty("radius", this.radius);
         config.addProperty("depth", this.depth);
         config.addProperty("chanceForSample", this.sampleChance);

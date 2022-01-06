@@ -35,8 +35,6 @@ import net.minecraftforge.common.BiomeDictionary;
 public class DikeDeposit extends Deposit implements IDeposit {
     public static final String JSON_TYPE = "geolosys:deposit_dike";
 
-    private HashMap<String, HashMap<BlockState, Float>> oreToWtMap = new HashMap<>();
-    private HashMap<BlockState, Float> sampleToWtMap = new HashMap<>();
     private int yMin;
     private int yMax;
     private int baseRadius;
@@ -50,18 +48,10 @@ public class DikeDeposit extends Deposit implements IDeposit {
             int yMax, int baseRadius, int genWt, String[] dimFilter, boolean isDimFilterBl,
             @Nullable List<BiomeDictionary.Type> biomeTypes, @Nullable List<Biome> biomeFilter,
             @Nullable boolean isBiomeFilterBl, HashSet<BlockState> blockStateMatchers) {
-        this.oreToWtMap = oreBlocks;
-        this.sampleToWtMap = sampleBlocks;
+        super(oreBlocks, sampleBlocks, genWt, dimFilter, isDimFilterBl, biomeTypes, biomeFilter, isBiomeFilterBl, blockStateMatchers);
         this.yMin = yMin;
         this.yMax = yMax;
         this.baseRadius = baseRadius;
-        this.setGenWt(genWt);
-        this.setDimFilter(dimFilter);
-        this.setDimFilterBl(isDimFilterBl);
-        this.setBiomeTypeFilter(biomeTypes);
-        this.setBiomeFilterBl(isBiomeFilterBl);
-        this.setBlockStateMatchers(blockStateMatchers);
-        this.setBiomeFilter(biomeFilter);
 
         // Verify that blocks.default exists.
         if (!this.oreToWtMap.containsKey("default")) {
@@ -104,12 +94,12 @@ public class DikeDeposit extends Deposit implements IDeposit {
     @Nullable
     public BlockState getOre(BlockState currentState) {
         String res = currentState.getBlock().getRegistryName().toString();
-        if (this.oreToWtMap.containsKey(res)) {
+        if (this.getOreToWtMap().containsKey(res)) {
             // Return a choice from a specialized set here
-            HashMap<BlockState, Float> mp = this.oreToWtMap.get(res);
+            HashMap<BlockState, Float> mp = this.getOreToWtMap().get(res);
             return DepositUtils.pick(mp, this.cumulOreWtMap.get(res));
         }
-        return DepositUtils.pick(this.oreToWtMap.get("default"), this.cumulOreWtMap.get("default"));
+        return DepositUtils.pick(this.getOreToWtMap().get("default"), this.cumulOreWtMap.get("default"));
     }
 
     /**
@@ -123,14 +113,14 @@ public class DikeDeposit extends Deposit implements IDeposit {
      */
     @Nullable
     public BlockState getSample() {
-        return DepositUtils.pick(this.sampleToWtMap, this.sumWtSamples);
+        return DepositUtils.pick(this.getSampleToWtMap(), this.sumWtSamples);
     }
 
     @Override
     @Nullable
     public HashSet<BlockState> getAllOres() {
         HashSet<BlockState> ret = new HashSet<BlockState>();
-        this.oreToWtMap.values().forEach(x -> x.keySet().forEach(y -> ret.add(y)));
+        this.getOreToWtMap().values().forEach(x -> x.keySet().forEach(y -> ret.add(y)));
         ret.remove(Blocks.AIR.defaultBlockState());
         return ret.isEmpty() ? null : ret;
     }
@@ -141,7 +131,7 @@ public class DikeDeposit extends Deposit implements IDeposit {
         ret.append("Dike deposit with Blocks=");
         ret.append(this.getAllOres());
         ret.append(", Samples=");
-        ret.append(Arrays.toString(this.sampleToWtMap.keySet().toArray()));
+        ret.append(Arrays.toString(this.getSampleToWtMap().keySet().toArray()));
         ret.append(", Y Range=[");
         ret.append(this.yMin);
         ret.append(",");
@@ -205,7 +195,7 @@ public class DikeDeposit extends Deposit implements IDeposit {
                     // Skip this block if it can't replace the target block or doesn't have a
                     // manually-configured replacer in the blocks object
                     if (!(this.getBlockStateMatchers().contains(current)
-                            || this.oreToWtMap.containsKey(current.getBlock().getRegistryName().toString()))) {
+                            || this.getOreToWtMap().containsKey(current.getBlock().getRegistryName().toString()))) {
                         continue;
                     }
 
@@ -329,8 +319,8 @@ public class DikeDeposit extends Deposit implements IDeposit {
         dimensions.add("filter", parser.parse(Arrays.toString(this.getDimensionFilter())));
 
         // Add basics of Plutons
-        config.add("blocks", SerializerUtils.deconstructMultiBlockMatcherMap(this.oreToWtMap));
-        config.add("samples", SerializerUtils.deconstructMultiBlockMap(this.sampleToWtMap));
+        config.add("blocks", SerializerUtils.deconstructMultiBlockMatcherMap(this.getOreToWtMap()));
+        config.add("samples", SerializerUtils.deconstructMultiBlockMap(this.getSampleToWtMap()));
         config.addProperty("yMin", this.yMin);
         config.addProperty("yMax", this.yMax);
         config.addProperty("baseRadius", this.baseRadius);
