@@ -33,7 +33,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.BiomeDictionary;
 
-public class SparseDeposit implements IDeposit {
+public class SparseDeposit extends Deposit implements IDeposit {
     public static final String JSON_TYPE = "geolosys:deposit_sparse";
 
     private HashMap<String, HashMap<BlockState, Float>> oreToWtMap = new HashMap<>();
@@ -46,14 +46,6 @@ public class SparseDeposit implements IDeposit {
     private HashSet<BlockState> blockStateMatchers;
     private String[] dimFilter;
     private boolean isDimFilterBl;
-
-    // Optional biome stuff!
-    @Nullable
-    private List<BiomeDictionary.Type> biomeTypeFilter;
-    @Nullable
-    private List<Biome> biomeFilter;
-    @Nullable
-    private boolean isBiomeFilterBl;
 
     /* Hashmap of blockMatcher.getRegistryName(): sumWt */
     private HashMap<String, Float> cumulOreWtMap = new HashMap<>();
@@ -73,10 +65,10 @@ public class SparseDeposit implements IDeposit {
         this.genWt = genWt;
         this.dimFilter = dimFilter;
         this.isDimFilterBl = isDimFilterBl;
-        this.biomeTypeFilter = biomeTypes;
-        this.isBiomeFilterBl = isBiomeFilterBl;
+        this.setBiomeTypeFilter(biomeTypes);
+        this.setBiomeFilterBl(isBiomeFilterBl);
         this.blockStateMatchers = blockStateMatchers;
-        this.biomeFilter = biomeFilter;
+        this.setBiomeFilter(biomeFilter);
 
         // Verify that blocks.default exists.
         if (!this.oreToWtMap.containsKey("default")) {
@@ -152,12 +144,12 @@ public class SparseDeposit implements IDeposit {
 
     @Override
     public boolean canPlaceInBiome(Biome b) {
-        return DepositUtils.canPlaceInBiome(b, this.biomeFilter, this.biomeTypeFilter, this.isBiomeFilterBl);
+        return DepositUtils.canPlaceInBiome(b, this.getBiomeFilter(), this.getBiomeTypeFilter(), this.isBiomeFilterBl());
     }
 
     @Override
     public boolean hasBiomeRestrictions() {
-        return this.biomeFilter != null || this.biomeTypeFilter != null;
+        return this.getBiomeFilter() != null || this.getBiomeTypeFilter() != null;
     }
 
     @Override
@@ -205,8 +197,8 @@ public class SparseDeposit implements IDeposit {
     public int generate(WorldGenLevel level, BlockPos pos, IDepositCapability cap) {
         /* Dimension checking is done in PlutonRegistry#pick */
         /* Check biome allowance */
-        if (!DepositUtils.canPlaceInBiome(level.getBiome(pos), this.biomeFilter, this.biomeTypeFilter,
-                this.isBiomeFilterBl)) {
+        if (!DepositUtils.canPlaceInBiome(level.getBiome(pos), this.getBiomeFilter(), this.getBiomeTypeFilter(),
+                this.isBiomeFilterBl())) {
             return 0;
         }
 
@@ -387,8 +379,8 @@ public class SparseDeposit implements IDeposit {
 
         // Custom logic for the biome filtering
         JsonObject biomes = new JsonObject();
-        biomes.addProperty("isBlacklist", this.isBiomeFilterBl);
-        biomes.add("filter", SerializerUtils.deconstructBiomes(this.biomeFilter, this.biomeTypeFilter));
+        biomes.addProperty("isBlacklist", this.isBiomeFilterBl());
+        biomes.add("filter", SerializerUtils.deconstructBiomes(this.getBiomeFilter(), this.getBiomeTypeFilter()));
 
         // Custom logic for the dimension filtering
         JsonObject dimensions = new JsonObject();
