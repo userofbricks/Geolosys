@@ -141,28 +141,8 @@ public class SparseDeposit extends Deposit implements IDeposit {
     }
 
     @Override
-    public boolean canPlaceInBiome(Biome b) {
-        return DepositUtils.canPlaceInBiome(b, this.getBiomeFilter(), this.getBiomeTypeFilter(), this.isBiomeFilterBl());
-    }
-
-    @Override
-    public boolean hasBiomeRestrictions() {
-        return this.getBiomeFilter() != null || this.getBiomeTypeFilter() != null;
-    }
-
-    @Override
     public int getGenWt() {
         return this.genWt;
-    }
-
-    @Override
-    public String[] getDimensionFilter() {
-        return this.getDimFilter();
-    }
-
-    @Override
-    public boolean isDimensionFilterBl() {
-        return this.isDimFilterBl();
     }
 
     @Override
@@ -382,8 +362,8 @@ public class SparseDeposit extends Deposit implements IDeposit {
 
         // Custom logic for the dimension filtering
         JsonObject dimensions = new JsonObject();
-        dimensions.addProperty("isBlacklist", this.isDimFilterBl());
-        dimensions.add("filter", parser.parse(Arrays.toString(this.getDimFilter())));
+        dimensions.addProperty("isBlacklist", this.isDimensionFilterBl());
+        dimensions.add("filter", parser.parse(Arrays.toString(this.getDimensionFilter())));
 
         // Add basics of Plutons
         config.add("blocks", SerializerUtils.deconstructMultiBlockMatcherMap(this.oreToWtMap));

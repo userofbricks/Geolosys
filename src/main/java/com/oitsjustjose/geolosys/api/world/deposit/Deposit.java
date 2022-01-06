@@ -1,18 +1,21 @@
 package com.oitsjustjose.geolosys.api.world.deposit;
 
+import com.oitsjustjose.geolosys.api.world.DepositUtils;
+import com.oitsjustjose.geolosys.api.world.IDeposit;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 
 import javax.annotation.Nullable;
 import java.util.List;
 /*
-    moved to location by Userofbricks
+    moved some Deposit class code to this location by Userofbricks
     purpos: to clean up the deposite classes and make them easier to read.
  */
-public class Deposit {
+public abstract class Deposit implements IDeposit {
     /*
        Each of the folowing variables has a getter and setter that has
        protected access so only the other deposite classes can use them.
+       unless otherwise needed
      */
     private String[] dimFilter;
     private boolean isDimFilterBl;
@@ -20,6 +23,7 @@ public class Deposit {
     /* Optional biome stuff!
        Each has a getter and setter that has
        protected access so only the other deposite classes can use them.
+       unless otherwise needed
      */
     @Nullable
     private List<BiomeDictionary.Type> biomeTypeFilter;
@@ -51,15 +55,24 @@ public class Deposit {
     protected void setBiomeFilterBl(@Nullable boolean biomeFilterBl) {
         isBiomeFilterBl = biomeFilterBl;
     }
-
-    protected boolean isDimFilterBl() {
+    @Override
+    public boolean canPlaceInBiome(Biome b) {
+        return DepositUtils.canPlaceInBiome(b, this.getBiomeFilter(), this.getBiomeTypeFilter(), this.isBiomeFilterBl());
+    }
+    @Override
+    public boolean hasBiomeRestrictions() {
+        return this.getBiomeFilter() != null || this.getBiomeTypeFilter() != null;
+    }
+    @Override
+    public boolean isDimensionFilterBl() {
         return isDimFilterBl;
     }
     protected void setDimFilterBl(boolean dimFilterBl) {
         isDimFilterBl = dimFilterBl;
     }
 
-    protected String[] getDimFilter() {
+    @Override
+    public String[] getDimensionFilter() {
         return dimFilter;
     }
     protected void setDimFilter(String[] dimFilter) {
