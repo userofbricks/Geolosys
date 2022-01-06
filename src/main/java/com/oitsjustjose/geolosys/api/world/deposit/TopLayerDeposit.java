@@ -38,7 +38,6 @@ public class TopLayerDeposit extends Deposit implements IDeposit {
     private int radius;
     private int depth;
     private float sampleChance;
-    private int genWt;
 
     /* Hashmap of blockMatcher.getRegistryName(): sumWt */
     private HashMap<String, Float> cumulOreWtMap = new HashMap<>();
@@ -54,7 +53,7 @@ public class TopLayerDeposit extends Deposit implements IDeposit {
         this.radius = radius;
         this.depth = depth;
         this.sampleChance = sampleChance;
-        this.genWt = genWt;
+        this.setGenWt(genWt);
         this.setDimFilter(dimFilter);
         this.setDimFilterBl(isDimFilterBl);
         this.setBiomeTypeFilter(biomeTypes);
@@ -129,11 +128,6 @@ public class TopLayerDeposit extends Deposit implements IDeposit {
     @Nullable
     public HashSet<BlockState> getAllOres() {
         return null;
-    }
-
-    @Override
-    public int getGenWt() {
-        return this.genWt;
     }
 
     @Override
@@ -302,7 +296,7 @@ public class TopLayerDeposit extends Deposit implements IDeposit {
         config.addProperty("radius", this.radius);
         config.addProperty("depth", this.depth);
         config.addProperty("chanceForSample", this.sampleChance);
-        config.addProperty("generationWeight", this.genWt);
+        config.addProperty("generationWeight", this.getGenWt());
         config.add("dimensions", dimensions);
         config.add("biomes", biomes);
 

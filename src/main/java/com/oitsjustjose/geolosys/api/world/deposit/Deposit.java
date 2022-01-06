@@ -21,6 +21,7 @@ public abstract class Deposit implements IDeposit {
      */
     private String[] dimFilter;
     private boolean isDimFilterBl;
+    private int genWt;
     private HashSet<BlockState> blockStateMatchers;
 
     /* Optional biome stuff!
@@ -83,10 +84,18 @@ public abstract class Deposit implements IDeposit {
     }
 
     @Override
+    public int getGenWt() {
+        return this.genWt;
+    }
+    protected void setGenWt(int genWt) {
+        this.genWt = genWt;
+    }
+
+    @Override
     public HashSet<BlockState> getBlockStateMatchers() {
         return this.blockStateMatchers == null ? DepositUtils.getDefaultMatchers() : this.blockStateMatchers;
     }
-    public void setBlockStateMatchers(HashSet<BlockState> blockStateMatchers) {
+    protected void setBlockStateMatchers(HashSet<BlockState> blockStateMatchers) {
         this.blockStateMatchers = blockStateMatchers;
     }
 }

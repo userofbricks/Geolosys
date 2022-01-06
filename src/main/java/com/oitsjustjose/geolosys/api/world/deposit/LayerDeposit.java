@@ -41,7 +41,6 @@ public class LayerDeposit extends Deposit implements IDeposit {
     private int yMax;
     private int radius;
     private int depth;
-    private int genWt;
 
     /* Hashmap of blockMatcher.getRegistryName(): sumWt */
     private HashMap<String, Float> cumulOreWtMap = new HashMap<>();
@@ -58,7 +57,7 @@ public class LayerDeposit extends Deposit implements IDeposit {
         this.yMax = yMax;
         this.radius = radius;
         this.depth = depth;
-        this.genWt = genWt;
+        this.setGenWt(genWt);
         this.setDimFilter(dimFilter);
         this.setDimFilterBl(isDimFilterBl);
         this.setBiomeTypeFilter(biomeTypes);
@@ -136,11 +135,6 @@ public class LayerDeposit extends Deposit implements IDeposit {
         this.oreToWtMap.values().forEach(x -> x.keySet().forEach(y -> ret.add(y)));
         ret.remove(Blocks.AIR.defaultBlockState());
         return ret.isEmpty() ? null : ret;
-    }
-
-    @Override
-    public int getGenWt() {
-        return this.genWt;
     }
 
     @Override
@@ -331,7 +325,7 @@ public class LayerDeposit extends Deposit implements IDeposit {
         config.addProperty("yMax", this.yMax);
         config.addProperty("radius", this.radius);
         config.addProperty("depth", this.depth);
-        config.addProperty("generationWeight", this.genWt);
+        config.addProperty("generationWeight", this.getGenWt());
         config.add("dimensions", dimensions);
         config.add("biomes", biomes);
 
