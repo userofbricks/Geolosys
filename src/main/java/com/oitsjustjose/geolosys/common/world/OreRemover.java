@@ -9,16 +9,23 @@ import java.util.stream.Collectors;
 import com.oitsjustjose.geolosys.Geolosys;
 import com.oitsjustjose.geolosys.common.config.CommonConfig;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.ReplaceBlockConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class OreRemover {
 
-    private static List<Block> toRm = Arrays.asList(
+    private static String[] stuff ={ "thing", "stuff", "many_things"};
+
+    private static List<Block> toRm = Arrays.stream(stuff).map(string -> {
+        return ForgeRegistries.BLOCKS.getValue(new ResourceLocation(string));
+    }).toList();
+            /*Arrays.asList(
             Blocks.DIORITE,
             Blocks.ANDESITE,
             Blocks.GRANITE,
@@ -43,7 +50,7 @@ public class OreRemover {
             Blocks.DEEPSLATE_DIAMOND_ORE,
             Blocks.DEEPSLATE_EMERALD_ORE,
             Blocks.DEEPSLATE_GOLD_ORE,
-            Blocks.DEEPSLATE_REDSTONE_ORE);
+            Blocks.DEEPSLATE_REDSTONE_ORE);*/
 
     // Validates, removes and logs each feature
     private static List<ConfiguredFeature<?, ?>> featureRemover(Block targetBlock,

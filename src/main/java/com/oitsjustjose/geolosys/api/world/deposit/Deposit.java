@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public abstract class Deposit implements IDeposit {
     /*
-       Each of the folowing variables has a getter and setter that has
+       Each of the folowing variables has a getter that has
        protected access so only the other deposite classes can use them.
        unless otherwise needed or unneeded
      */
@@ -90,24 +90,15 @@ public abstract class Deposit implements IDeposit {
     protected List<BiomeDictionary.Type> getBiomeTypeFilter() {
         return biomeTypeFilter;
     }
-    protected void setBiomeTypeFilter(@Nullable List<BiomeDictionary.Type> biomeTypeFilter) {
-        this.biomeTypeFilter = biomeTypeFilter;
-    }
 
     @Nullable
     protected List<Biome> getBiomeFilter() {
         return biomeFilter;
     }
-    protected void setBiomeFilter(@Nullable List<Biome> biomeFilter) {
-        this.biomeFilter = biomeFilter;
-    }
 
     @Nullable
     protected boolean isBiomeFilterBl() {
         return isBiomeFilterBl;
-    }
-    protected void setBiomeFilterBl(@Nullable boolean biomeFilterBl) {
-        isBiomeFilterBl = biomeFilterBl;
     }
     @Override
     public boolean canPlaceInBiome(Biome b) {
@@ -121,45 +112,27 @@ public abstract class Deposit implements IDeposit {
     public boolean isDimensionFilterBl() {
         return isDimFilterBl;
     }
-    protected void setDimFilterBl(boolean dimFilterBl) {
-        isDimFilterBl = dimFilterBl;
-    }
 
     @Override
     public String[] getDimensionFilter() {
         return dimFilter;
-    }
-    protected void setDimFilter(String[] dimFilter) {
-        this.dimFilter = dimFilter;
     }
 
     @Override
     public int getGenWt() {
         return this.genWt;
     }
-    protected void setGenWt(int genWt) {
-        this.genWt = genWt;
-    }
 
     @Override
     public HashSet<BlockState> getBlockStateMatchers() {
         return this.blockStateMatchers == null ? DepositUtils.getDefaultMatchers() : this.blockStateMatchers;
     }
-    protected void setBlockStateMatchers(HashSet<BlockState> blockStateMatchers) {
-        this.blockStateMatchers = blockStateMatchers;
-    }
 
     protected HashMap<String, HashMap<BlockState, Float>> getOreToWtMap() {
         return oreToWtMap;
     }
-    protected void setOreToWtMap(HashMap<String, HashMap<BlockState, Float>> oreToWtMap) {
-        this.oreToWtMap = oreToWtMap;
-    }
     protected HashMap<BlockState, Float> getSampleToWtMap() {
         return sampleToWtMap;
-    }
-    protected void setSampleToWtMap(HashMap<BlockState, Float> sampleToWtMap) {
-        this.sampleToWtMap = sampleToWtMap;
     }
 
     /**
